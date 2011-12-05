@@ -1,0 +1,15 @@
+{% extends 'templates/layout/admin.jinja2' %}
+{% block content %}
+    <form action="/login" method="post" id="login">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" />
+        <br />
+        
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" />
+        <br />
+        
+        <button type="submit">Login</button>
+        <br />
+    </form>
+{% endblock %}

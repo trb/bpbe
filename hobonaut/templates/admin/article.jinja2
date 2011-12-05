@@ -1,0 +1,264 @@
+{% extends 'templates/layout/admin.jinja2' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/highlight/solarized_light.css') }}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/jquery_ui/ui-darkness/jquery-ui-1.8.16.custom.css') }}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/jquery_timepicker/jquery-ui-timepicker-addon.css') }}" media="screen" />
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/jquery_timepicker/jquery-ui-timepicker-addon.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/rangyinputs/textinputs_jquery.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/pagedown/Markdown.Converter.js') }}"></script>
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/pagedown/Markdown.Sanitizer.js') }}"></script>
+
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/highlight/highlight.pack.js') }}"></script>
+    
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/write.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Article creator</h1>
+    
+    <div class="article-input">
+        <form action="#" id="article_form">
+            <label for="article_text">Article:</label>
+            <textarea id="article_text" name="article-text">{{ text|default('') }}</textarea>
+            <br />
+            
+            <label for="article_title">Title:</label>
+            <input id="article_title" type="text" name="article-title" value="{{ title|default('') }}" />
+            <br />
+            
+            <label for="article_tldr">Tl;dr:</label>
+            <textarea id="article_tldr" name="article-tldr">{{ tldr|default('') }}</textarea>
+            <br />
+            
+            {% if editing %}
+                <div id="message_autosave">
+                    Last saved at {{ date_format('%d.%m.%Y, %I:%M:%S %p', updated_at) }}
+                </div>
+                <div id="message_published" class="success">
+                    {% if published_at %}
+                        Article published at {{ date_format('%d.%m.%Y, %I:%M:%S %p', published_at) }}
+                    {% else %}
+                        Not published
+                    {% endif %}
+                </div>
+            {% else %}
+                <div id="message_autosave">
+                    Nothing to save yet!
+                </div>
+            {% endif %}
+            
+            <button id="schedule" type="submit" class="secondary">
+                Schedule
+            </button>
+            
+            <div id="schedule_input_wrapper" style="display: none;">
+                <input type="text" id="schedule_input" /><br />
+                <button id="schedule_save" type="button">Schedule!</button>
+            </div>
+            
+            <button id="publish" type="submit" class="primary last">
+                {% if is_published %}
+                    Unpublish
+                {% else %}
+                    Publish now
+                {% endif %}
+            </button>
+            
+            {% if editing %}
+                <a id="delete_link" href="/admin/article/{{ id }}/delete">
+                    Delete article
+                </a>
+            {% endif %}
+        </form>
+    </div>
+    
+    <article id="article_preview" class="article-preview">
+        {{ text_compiled|safe }}
+    </article>
+    
+    <br class="clearboth" />
+    
+    <script type="text/javascript">
+        (function($) {
+            {% if editing %}
+                var article_id = '{{ id }}';
+                var has_article_id = true;
+            {% else %}
+                var article_id = '';
+                var has_article_id = false;
+            {% endif %}
+            
+            {% if is_published %}
+                var published = true;
+            {% else %}
+                var published = false;
+            {% endif %}
+            
+            var aquire_id = function() {
+                $.get('/admin/new_article_id', function(data) {
+                    article_id = data.article_id;
+                    has_article_id = true;
+                });
+            };
+            
+            /**
+             * Replaces '#date#' in string with a euro-formatted date
+             */
+            String.prototype.addDate = function() {
+                var now = new Date();
+                
+                var date = {
+                    day: now.getDate(),
+                    month: now.getMonth()+1, //getMonth: 0 - 11
+                    year: now.getFullYear(),
+                    hour: now.getHours(),
+                    minute: now.getMinutes(),
+                    second: now.getSeconds()
+                };
+                
+                $(['day', 'month','hour', 'minute', 'second']).each(
+                    function(i, key) {
+                        // ().toString() => number-to-string conversion
+                        if ((date[key]).toString().length == 1) {
+                            date[key] = '0' + date[key];
+                        }
+                    }
+                );
+                
+                var date_string =
+                    date['day'] + '.' + date['month'] + '.' + date['year']
+                    + ' ' + date['hour'] + ':' + date['minute'] + ':'
+                    + date['second'];
+                
+                return this.replace(/#date#/ig, date_string);
+            };
+            
+            var save_article = function() {
+                var article = $('#article_form').serializeArray();
+                
+                $.post('/admin/article/' + article_id, article, function() {
+                    var message = 'Last saved at #date#';
+                    
+                    $('#message_autosave').text(message.addDate());
+                });
+            };
+            
+            var old = {
+                text: $('#article_text').val(),
+                title: $('#article_title').val(),
+                tldr: $('#article_tldr').val(),
+                
+                aquire: function() {
+                    this.text = $('#article_text').val();
+                    this.title = $('#article_title').val();
+                    this.tldr = $('#article_tldr').val();
+                },
+                
+                changed: function() {
+                    var text = $('#article_text').val();
+                    var title = $('#article_title').val();
+                    var tldr = $('#article_tldr').val();
+                    
+                    var has_changed = false;
+                    if (text != this.text) {
+                        has_changed = true;
+                    }
+                    if (title != this.title) {
+                        has_changed = true;
+                    }
+                    if (tldr != this.tldr) {
+                        has_changed = true;
+                    }
+                    
+                    return has_changed;
+                }
+            };
+            
+            setInterval(function() {
+                /*
+                 * Only save article when and identifier was aquired
+                 */
+                if (!has_article_id) {
+                    return;
+                }
+                
+                if (old.changed()) {
+                    save_article();
+                    
+                    old.aquire();
+                }
+            }, 500);
+            
+            /*
+             * Ask server for new article id, but only when one is not given
+             */
+            if (!has_article_id) {
+                aquire_id();
+            }
+            
+            $('#publish').click(function(event) {
+                event.preventDefault();
+                
+                if (!has_article_id) {
+                    return;
+                }
+                
+                if (published) {
+                    $.post('/admin/article/' + article_id + '/unpublish',
+                        function() {
+                            published = false
+                            $('#publish').text('Publish now');
+                        }
+                    );
+                } else {
+                    $.post('/admin/article/' + article_id + '/publish',
+                        function() {
+                            published = true
+                            $('#publish').text('Unpublish');
+                        }
+                    );
+                }
+            });
+            
+            $('#schedule_input').datetimepicker();
+            
+            $('#schedule').click(function(event) {
+                event.preventDefault();
+                
+                if (!has_article_id) {
+                    return;
+                }
+                
+                var width = $('#schedule').outerWidth();
+                var position = $('#schedule').position();
+                
+                var wrapper = $('#schedule_input_wrapper');
+
+                wrapper.css({
+                    left: position.left + 'px',
+                    top: (position.top + $('#schedule').outerHeight() + 8) + 'px',
+                    width: width
+                });
+                
+                wrapper.show();
+                
+                $('#schedule_save').click(function(event) {
+                    event.preventDefault();
+                    
+                    $.post('/admin/article/' + article_id + '/schedule', { date: $('#schedule_input').val() }, function() {
+                        $('#schedule_input').val('');
+                        $('#schedule_input_wrapper').hide();
+                    });
+                });
+            });
+        })(jQuery);
+        
+        hljs.initHighlightingOnLoad();
+    </script>
+{% endblock %}

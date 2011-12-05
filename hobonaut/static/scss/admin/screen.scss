@@ -1,0 +1,120 @@
+@import "_partial/base";
+@import "../_partial/typography";
+
+body {
+    background-color: $color-background;
+    color: $color-primary;
+    
+    @include text;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+h1, h2, h3, h4, h5 {
+    margin-bottom: 15px;
+}
+
+h1, h2, h3 {
+    @include display;
+}
+h4, h5 {
+    @include text;
+}
+h1 {
+    font-size: 48px;
+    line-height: 48px;
+}
+h2 {
+    font-size: 36px;
+    line-height: 36px;
+}
+h3 {
+    font-size: 28px;
+    line-height: 28px;
+}
+h4 {
+    font-size: 22px;
+    line-height: 22px;
+    font-weight: bold;
+}
+h5 {
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: bold;
+}
+
+.clearboth {
+    clear: both;
+}
+
+@import "_partial/controlpanel";
+@import "_partial/article_write";
+@import "_partial/login";
+
+#container {
+    width: 100%;
+}
+
+#menu {
+    width: 100%;
+    height: 29px;
+    background: {
+        image: url(/static/images/repeating_background.png);
+        repeat: repeat-x;
+        position: 0 -561px;
+    };
+    
+    clear: both;
+    
+    text-align: right;
+    
+    a {
+        margin-right: 30px;
+    
+        color: grayscale(invert($color-primary));
+        
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 29px;
+        
+        text-decoration: none;
+        
+        &.first {
+            display: block;
+            float: left;
+            margin-left: ((100% - $content-width) / 2);
+        }
+        
+        &.last {
+            margin-right: ((100% - $content-width) / 2);
+        }
+        
+        &:hover {
+            text-decoration: none;
+            color: grayscale(lighten(invert($color-primary), 20));
+        }
+        &:active {
+            text-decoration: none;
+            color: grayscale(darken(invert($color-primary), 20));
+        }
+        &:visisted {
+            color: grayscale(invert($color-primary));
+            text-decoration: none;
+        }
+    }
+}
+
+#content {
+    margin: auto;
+    width: $content-width;
+    color: $color-secondary-text;
+    background-color: $color-secondary;
+    border: {
+        top: 0;
+        left: 8px solid #fff;
+        right: 8px solid #fff;
+        bottom: 8px solid #fff;
+    };
+    
+    padding: 15px;
+}

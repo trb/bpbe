@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    </head>
+    <body>
+        <style type="text/css">
+            tbody tr:hover {
+                background-color: #E3C38D;
+            }
+        </style>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in values.iteritems() %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value|nl2br }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

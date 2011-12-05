@@ -1,0 +1,9 @@
+/* Use Google fonts for fonts that are available there */
+@import url(http://fonts.googleapis.com/css?family=Give+You+Glory|Quattrocento+Sans|Inconsolata);
+
+@import "compass/reset";
+
+$color-primary: #4A1C61;
+$color-dark: darken(#4A1C61, 5);
+
+$line-height-default: 28px;

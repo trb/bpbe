@@ -1,0 +1,56 @@
+/* Use Google fonts for fonts that are available there */
+@import url(http://fonts.googleapis.com/css?family=Give+You+Glory|Quattrocento+Sans|Inconsolata);
+
+@import "compass/reset";
+@import "compass/css3";
+
+$color-background: #e5dcf9;
+$color-primary: #4A1C61;
+$color-secondary: #f7f5e6;
+$color-secondary-text: #414141;
+
+$content-width: 80%;
+
+@mixin button-styled($color: #d5d5d5, $text-color: #222, $but-shadow-color: #444) {
+    cursor: pointer;
+    
+    @include box-shadow($but-shadow-color 0 0 0 2px);
+    
+    $text-shadow-color: invert(grayscale($text-color));
+    $text-shadow-color-active: $text-shadow-color;
+    
+    @if lightness($text-shadow-color) > 50% {
+        $text-shadow-color-active: darken($text-shadow-color, 10);
+    } @else {
+        $text-shadow-color: lighten($text-shadow-color, 10);
+        $text-shadow-color-active: lighten($text-shadow-color, 20);
+    }
+    
+    border: {
+        top: 1px solid lighten($color, 15);
+        left: 1px solid lighten($color, 5);
+        right: 1px solid lighten($color, 5);
+        bottom: 1px solid darken($color, 15);
+    }
+    
+    @include background(linear-gradient(top, desaturate(darken($color, 3), 5), desaturate(darken($color, 8), 5)));
+    color: $text-color;
+    @include text-shadow($text-shadow-color 0 1px 0);
+    
+    &:hover {
+        @include background(linear-gradient(top, $color, darken($color, 5)));
+    };
+    
+    &:active {
+        border: {
+            top: 1px solid lighten($color, 5);
+            left: 1px solid $color;
+            right: 1px solid $color;
+            bottom: 1px solid darken($color, 5);
+        }
+        
+        @include text-shadow($text-shadow-color-active 0 1px 0);
+        @include background(linear-gradient(top, darken($color, 4), darken($color, 5)));
+        @include box-shadow(lighten($but-shadow-color, 20) 0 0 0 2px);
+    };
+}

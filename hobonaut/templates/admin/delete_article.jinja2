@@ -1,0 +1,23 @@
+{% extends 'templates/layout/admin.jinja2' %}
+
+{% block head %}
+    {{ super() }}
+    
+    <style type="text/css">
+        button {
+            width: 15%;
+            margin-top: {{ margin_top }}%;
+            margin-left: {{ margin_left }}%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h3>Please confirm you wish to delete "{{ title }}":</h3>
+    
+    <form action="/admin/article/{{ id }}/delete" method="post">
+        <button type="submit">
+            Permanently delete the article
+        </button>
+    </form>
+{% endblock %}

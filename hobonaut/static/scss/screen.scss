@@ -1,0 +1,80 @@
+@import "_partial/base";
+@import "_partial/typography";
+
+html {
+    background: #000 url(/static/images/repeating_background.png) scroll repeat-x 0 0;
+    color: $color-primary;
+    z-index: 0;
+}
+
+body {
+    position: relative;
+    width: 584px;
+    margin: 0 auto 0 auto;
+    z-index: 1;
+}
+
+code {
+    @include code;
+    
+    display: block;
+    
+    padding: 5px 5px 5px 15px;
+    
+    white-space: pre;
+}
+
+#slogan {
+    @include script;
+    
+    position: absolute;
+    top: 565px;
+    left: -300px;
+    color: #fff;
+}
+
+#header {
+    background: #000 url(/static/images/hobo.png) scroll no-repeat 0 0;
+    height: 603px;
+    width: 584px;
+}
+
+#content_wrapper {
+    width: 484px;
+    background: #000 url(/static/images/content_background.png) scroll repeat-y 0 0;
+    padding-left: 60px;
+    padding-right: 40px;
+    
+    h1 {
+        @include display;
+    
+        margin-bottom: 24px;
+    }
+    
+    article {
+        @include text;
+        
+        p {
+            margin-bottom: 1em;
+        }
+        
+        &.last p:last-child {
+            margin: 0;
+        }
+    }
+    
+    section.tldr {
+        @include text;
+        font-size: 18px;
+        line-height: 20px;
+        font-weight: bold;
+        
+        margin-bottom: 15px;
+    }
+}
+
+#footer {
+    width: 584px;
+    height: 39px;
+    background: #000 url(/static/images/footer.png) scroll no-repeat 0 0;
+}

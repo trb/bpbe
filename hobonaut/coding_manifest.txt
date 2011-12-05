@@ -1,0 +1,74 @@
+Imports:
+  - all imports on top of file, no conditional imports
+  - no code executed in custom modules on import
+
+Indentation everywhere:
+  - four spaces
+  - no tab characters
+
+modules:
+  - lower case underscore
+  - articles.py
+  - some_module.py
+
+functions:
+  - Module level or other stand-alone functions
+  - lower case underscore
+  - get_public()
+  
+classes:
+  - upper case camel case
+  - Article
+  - SomeOtherClass
+
+methods:
+  - lower case underscore
+  - get_some_data()
+
+private variables, methods, functions:
+  - Class or module level
+  - leading underscore
+  - _id, _get_data
+  
+variables:
+  - lower underscore
+  - my_data
+  - data
+  - use singe qutoes for strings
+    - string = 'some value'
+
+comments:
+  - only where necessary or to document public apis
+  - use triple double quotes
+    - """This is a comment"""
+  
+unsanitized variables from input (GET, POST, ..):
+  - lower case underscore, prepend with 'us_'
+  - us_user_name = request.params.get('user_name')
+  
+sanitized variables from input:
+  - lower case underscore, prepend with 's_'
+  - s_user_name = sanitize(us_user_name)
+    
+Html/Css:
+  ids:
+    - lower case underscore
+    - content_wrapper
+    - article_text
+  classes:
+    - lower case hyphen
+    - last-element
+    
+Scss:
+  variables:
+    - lower case hyphen
+    - $default-size
+    
+  mixins:
+    - lower case hyphen
+    - @mixin button-styled
+
+Javascript:
+  - for internal code use the same convention as for python
+  - for plugins/external (reusable) code, use the projects conventions (most
+    likely jQuerys)

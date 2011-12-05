@@ -1,0 +1,34 @@
+{% extends 'templates/layout/public.jinja2' %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/highlight/solarized_light.css') }}" media="screen" />
+
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/highlight/highlight.pack.js') }}"></script>
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/write.js') }}"></script>
+{% endblock %}
+
+{% block slogan %}
+    {{ slogan }}
+{% endblock %}
+
+{% block content %}
+    {% for article in articles %}
+        <h1>{{ article.get('title') }}</h1>
+        
+        {% if article.has('tldr') %}
+            <section class="tldr">
+                {{ article.get('tldr') }}
+            </section>
+        {% endif %}
+        
+        <article{% if loop.last %} class="last"{% endif %}>
+            {{ article.get('text_compiled')|safe }}
+        </article>
+    {% endfor %}
+    
+    <script type="text/javascript">
+        $('article code').each(function(i, element) {
+            window.hljs.highlightBlock(element);
+        });
+    </script>
+{% endblock %}

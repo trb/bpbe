@@ -1,0 +1,55 @@
+.infobox {
+    padding: 1%;
+    margin: 2% 4%;
+    
+    float: left;
+    width: 39%;
+    
+    height: 200px;
+    
+    background-color: lighten($color-secondary, 3);
+    
+    p {
+        margin: 15px 0;
+    }
+}
+
+#slogan {
+    label {
+        display: inline;
+    }
+    
+    #new_slogan {
+        @include border-radius(2px);
+    
+        width: 78%;
+        margin-top: 10px;
+        border: 1px solid #999;
+        height: 25px;
+        padding: 4px;
+        font-size: 22px;
+        line-height: 25px;
+        color: #444;
+        display: block;
+        float: left;
+    }
+    
+    button {
+        @include button-styled(lighten($color-primary, 20), $color-secondary);
+        @include border-radius(2px);
+        margin-top: 12px;
+        margin-left: 10px;
+        height: 31px;
+        display: block;
+        float: left;
+    }
+    
+    #current_slogan {
+        font-style: italic;
+    }
+    
+    #slogan_confirm {
+        color: #4BB912;
+        margin-top: 3px;
+    }
+}

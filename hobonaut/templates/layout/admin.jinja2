@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        {% block head %}
+            <title>{% block title %}The Stellar Hobo from Jinja2{% endblock %}</title>
+            
+            <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/admin/screen.css') }}" media="screen" />
+    
+            <link rel="shortcut icon" href="{{ request.static_url('hobonaut:static/images/favicon.ico') }}" />
+            
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <div id="container">
+            <div id="menu">
+                <a href="/" class="first">Public pages</a>
+                <a href="/admin">Panel</a>
+                <a href="/admin/write" class="last">Write article</a>
+            </div>
+            <div id="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

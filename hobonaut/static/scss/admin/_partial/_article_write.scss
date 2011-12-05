@@ -1,0 +1,111 @@
+@import "compass/css3";
+
+code {
+    @include code;
+    
+    display: block;
+    
+    padding: 5px 5px 5px 15px;
+    
+    white-space: pre;
+}
+
+.article-input, .article-preview {
+    float: left;
+}
+
+.article-input {
+    width: 40%;
+    
+    label, textarea, input {
+        display: block;
+    }
+    
+    textarea, input {
+        @include text;
+        
+        border: 1px solid $color-secondary-text;
+        
+        width: 98%;
+        padding: 1%;
+        
+        &:focus {
+            border: 1px solid lighten($color-secondary-text, 10);
+            outline: lighten($color-secondary-text, 10) solid thin;
+            background-color: lighten($color-secondary, 3);
+        }
+    }
+    
+    label {
+        font-weight: bold;
+        font-size: 16px;
+    }
+    
+    textarea {
+        height: 500px;
+    }
+    
+    #article_tldr {
+        height: 80px;
+    }
+    
+    button {
+        float: left;
+        width: 45%;
+        height: 60px;
+        font-size: 18px;
+        line-height: 60px;
+        font-weight: bold;
+        
+        cursor: pointer;
+        $but-shadow-color: #444;
+        
+        @include border-radius(2px);
+        
+        &.last {
+            margin-left: 10%;
+        };
+        
+        &.secondary {
+            @include button-styled(#d5d5d5, #222);
+        };
+        
+        &.primary {
+            /* #05da05 = green */
+            @include button-styled(#05da05, #f3f3f3);
+        };
+    }
+    
+    #schedule_input_wrapper {
+        position: absolute;
+    
+        background-color: $color-secondary;
+        border: 1px solid #000;
+        
+        padding: 5px;
+        
+        @include box-shadow(#aaa 0 0 8px 8px);
+        
+        input {
+            display: block;
+            width: 80%;
+            margin: auto;
+        }
+        
+        button {
+            display: block;
+            width: 80%;
+            margin-left: 10%;
+            height: $line-height-default;
+            line-height: $line-height-default;
+            font-weight: normal;
+        }
+    }
+}
+
+.article-preview {
+    width: 444px;
+    padding: 15px 80px 15px 60px;
+    background-color: lighten($color-secondary, 5);    
+    margin-left: 2%;
+}

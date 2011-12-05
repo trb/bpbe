@@ -1,0 +1,86 @@
+{% extends 'templates/layout/admin.jinja2' %}
+{% block content %}
+    {% macro render_articles(articles) -%}
+        <ul>
+            {% for article in articles %}
+                <li>
+                    <a href="/admin/article/{{ article.get('id') }}">
+                        {{ article.get('title')|default('(no title)', true) }}
+                        ({{ date_format('%d.%m.%Y, %I:%M:%S %p', article.get('updated_at')) }})
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {%- endmacro %}
+    <h1>Hobonaut controlpanel</h1>
+    
+    <div class="infobox">
+        <h3>Unpublished</h3>
+        <p>
+            Articles that have been written and saved, but not published or
+            scheduled. At the moment there are {{ private_articles|count }}
+            private articles.
+        </p>
+        
+        {{ render_articles(private_articles) }}
+    </div>
+    <div class="infobox">
+        <h3>Published</h3>
+        <p>
+           {{ public_articles|count }} articles are publicly available.
+        </p>
+        
+        {{ render_articles(public_articles) }}
+    </div>
+    <br class="clearboth" />
+    
+    
+    <div class="infobox">
+        <h3>Scheduled</h3>
+        <p>
+            {{ scheduled_articles|count }} articles are scheduled to be
+            published in the future.
+        </p>
+        
+        {{ render_articles(scheduled_articles) }}
+    </div>
+    <div class="infobox">
+        <h3>Slogan</h3>
+        <p>
+            Set a new slogan:
+        </p>
+        <div id="slogan">
+            <label for="current_slogan">Current slogan:</label>
+            <span id="current_slogan">
+                {{ slogan }}
+            </span>
+            <br />
+            
+            <input type="text" id="new_slogan" />
+            <button id="save_slogan" type="button">Save</button>
+            <br class="clearboth" />
+            
+            <div id="slogan_confirm" style="display: none;">Slogan saved</div>
+            <br class="clearboth" />
+        </div>
+        
+        {{ render_articles(scheduled_articles) }}
+    </div>
+    
+    <br class="clearboth" />
+    
+    <script type="text/javascript">
+        $('#save_slogan').click(function(event) {
+            event.preventDefault();
+            
+            var slogan = $('#new_slogan').val();
+            
+            $.post('/admin/slogan', { slogan: slogan}, function() {
+                $('#slogan_confirm').show();
+                $('#slogan_confirm').fadeOut(1200);
+                
+                $('#current_slogan').text(slogan);
+            });
+        });
+    </script>
+{% endblock %}

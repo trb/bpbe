@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        {% block head %}
+            <title>The Stellar Hobo from Jinja2</title>
+            
+            <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/screen.css') }}" media="screen" />
+    
+            <link rel="shortcut icon" href="{{ request.static_url('hobonaut:static/images/favicon.ico') }}" />
+            
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+        {% endblock %}
+    </head>
+    <body>
+    
+        <div id="slogan">
+            {% block slogan %}In space, no one can hear you whistle{% endblock %}
+        </div>
+        
+        <div id="header">
+        </div>
+        
+        <div id="content_wrapper">
+            <a name="readon,brother"></a>
+            {% block content %}{% endblock %}
+        </div>
+        
+        <div id="footer">
+        </div>
+        
+    </body>
+</html>

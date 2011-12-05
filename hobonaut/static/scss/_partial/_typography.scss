@@ -1,0 +1,54 @@
+/*
+font-family: 'Virgo'; => Display, headlines and such. Cool futuristic font
+font-family: 'Quattrocento Sans', sans-serif; => Normal text, elegant and readable font 
+font-family: 'Give You Glory', cursive; => Script, for highlights, looks rough (like I'd imagine a hobos handwriting)
+font-family: 'Inconsolata', monospace; => Monospace for code
+*/
+@import "base";
+
+/* Self-host all other fonts */
+@font-face {
+    font-family: 'Virgo01Regular';
+    src: url('/static/fonts/virgo/virgo-webfont.eot');
+    src: url('/static/fonts/virgo/virgo-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/fonts/virgo/virgo-webfont.woff') format('woff'),
+         url('/static/fonts/virgo/virgo-webfont.ttf') format('truetype'),
+         url('/static/fonts/virgo/virgo-webfont.svg#Virgo01Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@mixin display {
+    font: {
+        family: 'Virgo01Regular', cursive;
+        size: 36px;
+    }
+}
+@mixin text {
+    font: {
+        family: 'Quattrocento Sans', sans-serif;
+        size: 16px;
+    };
+    
+    line-height: $line-height-default;
+    
+    strong, b {
+        font-weight: bold;
+    }
+    
+    i, em {
+        font-style: italic;
+    }
+}
+@mixin script {
+    font: {
+        family: 'Give You Glory', cursive;
+        size: 20px;
+    }
+}
+@mixin code {
+    font: {
+        family: 'Inconsolata', monospace;
+        size: 14px;
+    }
+}
