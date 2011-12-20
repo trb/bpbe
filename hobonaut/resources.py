@@ -2,7 +2,7 @@ from pyramid.security import Allow, DENY_ALL
 import hashlib
 
 
-global_salt = '1M11bk-r-gP9XpYO_SRz'
+global_salt = 'B6Wo3wQFYoTpZLEE_BB-q-_D'
 
 
 def hash(global_salt, user_salt, user_password):
