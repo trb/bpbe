@@ -4,7 +4,6 @@
     <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/highlight/solarized_light.css') }}" media="screen" />
 
     <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/highlight/highlight.pack.js') }}"></script>
-    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/write.js') }}"></script>
 {% endblock %}
 
 {% block slogan %}
@@ -13,7 +12,11 @@
 
 {% block content %}
     {% for article in articles %}
-        <h1>{{ article.get('title') }}</h1>
+        <h1>
+            <a href="/one/{{ article.get_title_for_url() }}#readon,brother">
+                {{ article.get('title') }}
+            </a>
+        </h1>
         
         {% if article.has('tldr') %}
             <section class="tldr">

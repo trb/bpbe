@@ -1,0 +1,43 @@
+{% extends 'templates/layout/public.jinja2' %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/highlight/solarized_light.css') }}" media="screen" />
+
+    <script type="text/javascript" src="{{ request.static_url('hobonaut:static/javascripts/highlight/highlight.pack.js') }}"></script>
+{% endblock %}
+
+{% block slogan %}
+    {{ slogan }}
+{% endblock %}
+
+{% block content %}
+    <a href="/#readon,brother" style="display: block; margin-bottom: 15px;">Back</a>
+    
+    {% if show_google_welcome %}
+        <div class="box info">
+            After analyzing the
+            <a href="http://en.wikipedia.org/wiki/HTTP_referer">HTTP-Referer</a>,
+            I think you are looking for this Kinfu article.<br />
+            Should this assumption be wrong, you're
+            <a href="/#readon,brother">welcomed to return to the main page.</a>
+        </div>
+    {% endif %}
+    
+    <h1>{{ article.get('title') }}</h1>
+    
+    {% if article.has('tldr') %}
+        <section class="tldr">
+            {{ article.get('tldr') }}
+        </section>
+    {% endif %}
+    
+    <article class="last">
+        {{ article.get('text_compiled')|safe }}
+    </article>
+    
+    <script type="text/javascript">
+        $('article code').each(function(i, element) {
+            window.hljs.highlightBlock(element);
+        });
+    </script>
+{% endblock %}

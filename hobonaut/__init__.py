@@ -26,13 +26,13 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     config.add_subscriber('hobonaut.event_handlers.set_session_id',
                           'pyramid.events.NewRequest')
-    
+
     config.add_subscriber('hobonaut.event_handlers.cleanup',
                           'pyramid.events.NewRequest')
     """Jinja2 custom filters
     """
     jinja2_filters.register_all(config.get_jinja2_environment())
-    
+
     config.add_route('display_articles', '/')
     config.add_route('login', '/login')
     config.add_route('admin', '/admin',
@@ -55,20 +55,24 @@ def main(global_config, **settings):
                      factory='hobonaut.resources.Backend')
     config.add_route('redis', '/redis',
                      factory='hobonaut.resources.Backend')
-    
+    config.add_route('display_article', '/one/{title}')
+
     # Only for testing/developing purposes, should be deactivted in prod.
     config.add_view('hobonaut.views.redis',
                     route_name='redis',
                     renderer='hobonaut:templates/redis.jinja2')
-    
+
     # Error pages
     config.add_view('hobonaut.views.error_forbidden',
                     context=HTTPForbidden,
                     renderer='hobonaut:templates/errors/forbidden.jinja2')
-    
+
     config.add_view('hobonaut.views.display_articles',
                     route_name='display_articles',
                     renderer='hobonaut:templates/articles.jinja2')
+    config.add_view('hobonaut.views.display_article',
+                    route_name='display_article',
+                    renderer='hobonaut:templates/article.jinja2')
     config.add_view('hobonaut.views.error_forbidden',
                     route_name='login',
                     renderer='hobonaut:templates/errors/forbidden.jinja2',
@@ -128,6 +132,6 @@ def main(global_config, **settings):
                     request_method='POST',
                     permission='edit')
     config.add_static_view('static', 'hobonaut:static')
-    
+
     return config.make_wsgi_app()
 

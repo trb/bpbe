@@ -4,6 +4,8 @@ from models import articles, authors
 from models import slogan
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember
+
+
 import os
 import base64
 import time
@@ -24,7 +26,27 @@ def generate_id():
     return base64.urlsafe_b64encode(os.urandom(12))
 
 
+def display_article(request):
+    if 'kinfu_from_google' in request.session:
+        show_google_welcome = True
+        del request.session['kinfu_from_google']
+    else:
+        show_google_welcome = False
+
+    return {
+            'show_google_welcome': show_google_welcome,
+            'article': articles.get_by_title(request.matchdict['title']),
+            'slogan': slogan.get()
+            }
+
+
+_referer_has_kinfu_re = r = re.compile('https?://www\.google\..+?q=.*?kinfu&',
+                                       re.I)
 def display_articles(request):
+    if re.search(_referer_has_kinfu_re, request.referer):
+        request.session['kinfu_from_google'] = True
+        return HTTPFound(location='/one/i-know-kinfu#readon,brother')
+
     return {
             'articles': articles.get_published(),
             'slogan': slogan.get()
@@ -48,12 +70,12 @@ def write_article(request):
 
 def edit_article(request):
     article = articles.get(request.matchdict['id'])
-    
+
     if article.has('publish_at'):
         publish_at = article.get('publish_at')
     else:
         publish_at = None
-        
+
     return {
             'editing': True,
             'id': article.get('id'),
@@ -74,12 +96,12 @@ def new_article_id(request):
     # zscore is O(1), zrank is O(log(n)), both return None if key doesn't exist
     while rc().zscore(rn('articles'), article_id) is not None:
         article_id = generate_id()
-    
+
     return {
             'article_id': article_id
             }
 
-    
+
 def save_article(request):
     us_article_id = request.matchdict['id']
     article = articles.get(us_article_id)
@@ -92,7 +114,7 @@ def save_article(request):
             save_data[us_key[8:]] = us_value
     article.set(**save_data)
 
-    
+
 def confirm_article_deletion(request):
     article_id = request.matchdict['id']
     article = articles.get(article_id)
@@ -103,7 +125,7 @@ def confirm_article_deletion(request):
             'margin_top': str(random.randint(5, 25))
             }
 
-    
+
 def delete_article(request):
     us_article_id = request.matchdict['id']
     article = articles.get(us_article_id)
@@ -115,14 +137,14 @@ def publish_article(request):
     us_article_id = request.matchdict['id']
     article = articles.get(us_article_id)
     article.publish()
-    
-    
+
+
 def unpublish_article(request):
     us_article_id = request.matchdict['id']
     article = articles.get(us_article_id)
     article.unpublish()
-    
-    
+
+
 def schedule_article(request):
     us_article_id = request.matchdict['id']
     us_date = request.POST.get('date')
@@ -147,7 +169,7 @@ def login(request):
     redirect = None
     try:
         author = authors.get_by_name(us_name)
-        
+
         if author.verify(us_password):
             redirect = HTTPFound(location=request.route_url('admin'),
                                  headers=remember(request, author.get('name')))
@@ -156,7 +178,7 @@ def login(request):
     except:
         #redirect = HTTPFound(location='/admin/write')
         redirect = HTTPFound(location=request.route_url('login'))
-        
+
     return redirect
 
 
@@ -174,9 +196,9 @@ def redis(request):
     if 'db' in request.GET:
         if re.match('[0-9]{1,2}', str(request.GET['db'])):
             kwargs['db'] = int(request.GET['db'])
-    
+
     data = generic_data.GenericData(key_search, **kwargs)
-    
+
     return {
             'request': request,
             'values': data.get_all()

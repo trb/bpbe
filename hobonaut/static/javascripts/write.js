@@ -6,12 +6,12 @@ $(document).ready(function() {
      * for readability and clarity.
      */
     var shift_pressed = false;
-    $('#article-text').keydown(function(event) {
+    $('#article_text').keydown(function(event) {
         if (event.which === 16) {
             shift_pressed = true;
         }
     });
-    $('#article-text').keyup(function(event) {
+    $('#article_text').keyup(function(event) {
         if (event.which === 16) {
             shift_pressed = false;
         }
@@ -20,7 +20,7 @@ $(document).ready(function() {
     /*
      * Keycode 9 == tab key, insert 4 spaces
      */
-    $('#article-text').keydown(function(event) {
+    $('#article_text').keydown(function(event) {
         /*
          * Kills event. After a call to this function, no handler will be
          * triggered.
@@ -32,11 +32,11 @@ $(document).ready(function() {
         }
         
         function get_text() {
-            return $('#article-text').val();
+            return $('#article_text').val();
         }
         
         function set_text(text) {
-            $('#article-text').val(text);
+            $('#article_text').val(text);
         }
         
         function insert(index, text) {
@@ -44,7 +44,7 @@ $(document).ready(function() {
                 throw 'Index must be specified by a number';
             }
             
-            var field = $('#article-text');
+            var field = $('#article_text');
             var value = get_text();
             
             value = value.substring(0, index) + text + value.substring(index);
@@ -55,7 +55,7 @@ $(document).ready(function() {
         }
         
         function get_selection() {
-            return $('#article-text').getSelection();
+            return $('#article_text').getSelection();
         }
         
         /**
@@ -135,7 +135,7 @@ $(document).ready(function() {
                     new_caret_position = 0;
                 }
                 
-                $('#article-text').setSelection(new_caret_position,
+                $('#article_text').setSelection(new_caret_position,
                                                 new_caret_position);
             }
         }
@@ -230,7 +230,7 @@ $(document).ready(function() {
                 selection_start = start+1;
             }
             
-            $('#article-text').setSelection(selection_start, selection_end);
+            $('#article_text').setSelection(selection_start, selection_end);
         }
         
         switch (event.which) {

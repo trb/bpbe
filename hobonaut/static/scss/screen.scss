@@ -1,5 +1,6 @@
 @import "_partial/base";
 @import "_partial/typography";
+@import "_partial/recurring";
 
 html {
     background: #000 url(/static/images/repeating_background.png) scroll repeat-x 0 0;
@@ -49,6 +50,24 @@ code {
         @include display;
     
         margin-bottom: 24px;
+        
+        a {
+            text-decoration: none;
+            color: $color-primary;
+            
+            &:hover {
+                text-decoration: underline;
+                color: lighten($color-primary, 20);
+            };
+            &:visited {
+                text-decoration: none;
+                color: $color-primary;
+            };
+            &:active {
+                text-decoration: underline;
+                color: darken($color-primary, 5);
+            };
+        }
     }
     
     article {

@@ -20,13 +20,18 @@ def mget(*ids):
 
 def get(id_):
     return mget(id_)[0]
-    
-    
+
+
+def get_by_title(title):
+    id = rc().get(rn('article:title_to_id:{0}'.format(title)))
+    return get(id)
+
+
 def clear_published_articles():
     cache.delete('articles')
 
 
-def get_published(max_ = 7):
+def get_published(max_=7):
     """Get articles that were published, at most "max"
     
     Tries to load articles from cache for maximum performance, only creates
@@ -48,7 +53,7 @@ def get_private():
     """Returns a list of articles that are neither published, nor scheduled,
     and therefore private
     """
-    
+
     """Intersecting three sets with 10M entries each takes about 75s in python,
     so simply read all articles, published articles and pipeline from redis and
     diff those in python
@@ -57,7 +62,7 @@ def get_private():
     published = set(rc().zrevrange(rn('articles:published'), 0, -1))
     scheduled = set(rc().zrevrange(rn('pipeline'), 0, -1))
     article_ids = articles - published - scheduled
-    
+
     return mget(*article_ids)
 
 
@@ -74,7 +79,7 @@ class Article(cache.Multiload):
         self._id = id_
         self._key = 'Article:' + str(self._id)
         super(Article, self).__init__()
-        
+
     def _get_data_all(self):
         pipeline = rc().pipeline()
         pipeline.hgetall(rn('article:{0}'.format(self._id)))\
@@ -85,24 +90,27 @@ class Article(cache.Multiload):
         data = pipeline.execute()
         return_data = data[0]
         return_data['last_retrieval_at'] = data[1]
-        
+
         return return_data
-        
+
     def _title_url(self, title):
         clean_title = ''
         title = title.lower()
         for c in title:
             if c == ' ':
-                clean_title+= '-'
+                clean_title += '-'
             if c in 'abcdefghijklmnopqrstuvwxyz1234567890_,.!':
-                clean_title+= c
-                
+                clean_title += c
+
         return clean_title
-    
+
+    def get_title_for_url(self):
+        return self._title_url(self.get('title'))
+
     def exists(self):
         """zscore is faster than zrank"""
         return rc().zscore(rn('articles'), self._id) is not None
-    
+
     def create(self):
         """Creates initial values for an article"""
         now = int(time.time())
@@ -112,7 +120,7 @@ class Article(cache.Multiload):
                     'created_at': now,
                     'id': self._id
                     })
-        
+
     def set(self, **data):
         """Saves given key=value pairs and updates cache
         """
@@ -144,11 +152,11 @@ class Article(cache.Multiload):
             save_data[key] = value
         rc().hmset(rn('article:{0}'.format(self._id)), save_data)
         self._set_data(**save_data)
-        
+
     def delete(self):
         if not self.exists():
             return # My work here is done
-        
+
         pipeline = rc().pipeline()
         url_title = self._title_url(self.get('title'))
         pipeline.delete(rn('article:title_to_id:{0}'.format(url_title)))\
@@ -161,18 +169,18 @@ class Article(cache.Multiload):
         pipeline.execute()
         clear_published_articles()
         self._delete(self)
-        
+
     def _cb_rem(self, fields):
         """ Delete fields from article hash """
         for field in fields:
             rc().hdel(rn('article:{0}'.format(self._id)), field)
-        
+
     def is_published(self):
         return rc().zscore(rn('articles:published'), self._id) is not None
-    
+
     def is_scheduled(self):
         return rc().zscore(rn('pipeline'), self._id) is not None
-        
+
     def publish(self):
         if self.has('publish_at'):
             publish_at = self.get('publish_at')
@@ -181,13 +189,13 @@ class Article(cache.Multiload):
         rc().zadd(rn('articles:published'), publish_at, self._id)
         self.set(publish_at=publish_at)
         clear_published_articles()
-        
+
     def unpublish(self):
         rc().zrem(rn('articles:published'), self._id)
         if self.has('publish_at'):
             self.rem('publish_at')
         clear_published_articles()
-        
+
     def schedule(self, timestamp):
         rc().zadd(rn('pipeline'), timestamp, self._id)
         self.set(publish_at=timestamp)
