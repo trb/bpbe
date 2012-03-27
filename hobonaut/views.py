@@ -43,7 +43,7 @@ def display_article(request):
 _referer_has_kinfu_re = r = re.compile('https?://www\.google\..+?q=.*?kinfu&',
                                        re.I)
 def display_articles(request):
-    if re.search(_referer_has_kinfu_re, request.referer):
+    if request.referer and re.search(_referer_has_kinfu_re, request.referer):
         request.session['kinfu_from_google'] = True
         return HTTPFound(location='/one/i-know-kinfu#readon,brother')
 
