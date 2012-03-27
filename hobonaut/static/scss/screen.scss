@@ -17,12 +17,17 @@ body {
 
 code {
     @include code;
-    
     display: block;
-    
-    padding: 5px 5px 5px 15px;
-    
     white-space: pre;
+    
+    margin-bottom: 15px;
+    @include box-shadow(#999, 2px, 2px, 0px);
+    @include border-radius(5px);
+    
+    border-left: 1px solid #fefefe;
+    border-top: 1px solid #fefefe;
+    
+    overflow-x: auto;
 }
 
 #slogan {
