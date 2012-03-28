@@ -10,6 +10,10 @@
     {{ slogan }}
 {% endblock %}
 
+{% block title %}
+    {{ article.get('title') }} - The Stellar Hobonaut
+{% endblock %}
+
 {% block content %}
     <a href="/#readon,brother" style="display: block; margin-bottom: 15px;">Back</a>
     

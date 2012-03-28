@@ -2,7 +2,7 @@
 <html>
     <head>
         {% block head %}
-            <title>The Stellar Hobo</title>
+            <title>{% block title %}The Stellar Hobo{% endblock %}</title>
             
             <link rel="stylesheet" type="text/css" href="{{ request.static_url('hobonaut:static/css/screen.css') }}" media="screen" />
     
