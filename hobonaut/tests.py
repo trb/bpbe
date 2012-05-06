@@ -1,6 +1,8 @@
 import unittest
 from pyramid import testing
 
+# @todo Add tests
+
 class ViewTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
